@@ -19,7 +19,7 @@ col({@required this.l ,@required this.quefn,@required this.idx});
                     return Answer(() =>quefn(answer["score"]), answer["text"]);
                   }).toList(),
                 ],
-              )
+              ) 
     ;
   }
 }
