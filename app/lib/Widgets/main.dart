@@ -62,10 +62,10 @@ class _app_2State extends State<app_2> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
           ),
-          buttonTheme: ButtonTheme(TextStyle(color: Colors.white))
+          //buttonTheme: ButtonTheme(TextStyle(color: Colors.white))
         ),
         home: Scaffold(
-            appBar: AppBar(
+            appBar: AppBar( 
               title: Text(
                 "My Expenses",
               ),

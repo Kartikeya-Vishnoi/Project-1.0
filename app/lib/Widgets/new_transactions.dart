@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import './main.dart';
 
 class New_Transactions extends StatefulWidget {
@@ -11,8 +13,8 @@ class New_Transactions extends StatefulWidget {
 
 class _New_TransactionsState extends State<New_Transactions> {
   final titleController = TextEditingController();
-
   final AmountController = TextEditingController();
+  DateTime _selecteddate;
 
   void submit() {
     final double amt = double.parse(AmountController.text);
@@ -22,6 +24,23 @@ class _New_TransactionsState extends State<New_Transactions> {
     }
     widget.func(txtitle, amt);
     Navigator.of(context).pop();
+  }
+
+  void datepicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2021),
+            lastDate: DateTime.now())
+        .then((pickeddate) {
+      if (pickeddate == null) {
+        return;
+      } else {
+        setState(() {
+          _selecteddate = pickeddate;
+        });
+      }
+    });
   }
 
   @override
@@ -48,9 +67,14 @@ class _New_TransactionsState extends State<New_Transactions> {
             height: 70,
             child: Row(
               children: [
-                Text("No Date Choosen"),
+                Flexible(
+                  child:Text(_selecteddate == null
+                    ? "No Date Choosen"
+                    : DateFormat.yMd().format(_selecteddate)),
+                    fit: FlexFit.tight,
+                    ),
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: datepicker,
                   child: Text(
                     "Choose a Date",
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -62,10 +86,9 @@ class _New_TransactionsState extends State<New_Transactions> {
           ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
-            textColor:Theme.of(context).buttonColor
+            textColor: Theme.of(context).buttonColor,
             onPressed: submit,
             child: Text("Add Transaction"),
-            textColor: Colors.purple,
           ),
         ],
       ),
