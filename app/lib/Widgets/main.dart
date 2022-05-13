@@ -24,14 +24,20 @@ class _app_2State extends State<app_2> {
     }).toList();
   }
 
-  void _addnextx(String txtitle, double txamount) {
+  void _addnextx(String txtitle, double txamount, DateTime chosendate) {
     Transaction _tx = new Transaction(
         id: "${DateTime.now()}",
         title: txtitle,
         amount: txamount,
-        date: DateTime.now());
+        date: chosendate);
     setState(() {
       _list.add(_tx);
+    });
+  }
+
+  void _deletetx(String id){
+    setState(() {
+      _list.removeWhere((tx) => tx.id==id);
     });
   }
 
@@ -49,6 +55,7 @@ class _app_2State extends State<app_2> {
         theme: ThemeData(
           primarySwatch: Colors.purple,
           accentColor: Colors.amber,
+          errorColor: Colors.red,
           fontFamily: "QuickSand",
           textTheme: TextTheme(
             headline6: TextStyle(
@@ -84,7 +91,7 @@ class _app_2State extends State<app_2> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                 chart(_recentransaction),
-                Transaction_List(_list)
+                Transaction_List(_list,_deletetx)
               ]),
             ),
             floatingActionButton: Builder(

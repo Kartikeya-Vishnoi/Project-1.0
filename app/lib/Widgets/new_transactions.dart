@@ -19,10 +19,13 @@ class _New_TransactionsState extends State<New_Transactions> {
   void submit() {
     final double amt = double.parse(AmountController.text);
     final String txtitle = titleController.text;
-    if (amt <= 0 || txtitle.length == 0) {
+    if(AmountController.text.isEmpty){
       return;
     }
-    widget.func(txtitle, amt);
+    if (amt <= 0 || txtitle.length == 0 || _selecteddate==null) {
+      return;
+    }
+    widget.func(txtitle, amt,_selecteddate);
     Navigator.of(context).pop();
   }
 
