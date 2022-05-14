@@ -35,9 +35,9 @@ class _app_2State extends State<app_2> {
     });
   }
 
-  void _deletetx(String id){
+  void _deletetx(String id) {
     setState(() {
-      _list.removeWhere((tx) => tx.id==id);
+      _list.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -51,6 +51,20 @@ class _app_2State extends State<app_2> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text(
+        "My Expenses",
+      ),
+      actions: [
+        Builder(builder: (co) {
+          return IconButton(
+              onPressed: () {
+                startAddNewTransaction(co);
+              },
+              icon: Icon(Icons.add));
+        })
+      ],
+    );
     return MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.purple,
@@ -69,30 +83,34 @@ class _app_2State extends State<app_2> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
           ),
-          //buttonTheme: ButtonTheme(TextStyle(color: Colors.white))
         ),
         home: Scaffold(
-            appBar: AppBar( 
-              title: Text(
-                "My Expenses",
-              ),
-              actions: [
-                Builder(builder: (co) {
-                  return IconButton(
-                      onPressed: () {
-                        startAddNewTransaction(co);
-                      },
-                      icon: Icon(Icons.add));
-                })
-              ],
-            ),
+            appBar: appBar,
             body: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                chart(_recentransaction),
-                Transaction_List(_list,_deletetx)
-              ]),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Builder(builder: (context) {
+                      return Container(
+                          height: (MediaQuery.of(context).size.height -
+                                  appBar.preferredSize.height -
+                                  MediaQuery.of(context).padding.top -
+                                  MediaQuery.of(context).padding.bottom -
+                                  kToolbarHeight) *
+                              0.3,
+                          child: chart(_recentransaction));
+                    }),
+                    Builder(builder: (context) {
+                      return Container(
+                          height: (MediaQuery.of(context).size.height -
+                                  appBar.preferredSize.height -
+                                  MediaQuery.of(context).padding.top -
+                                  MediaQuery.of(context).padding.bottom -
+                                  kToolbarHeight) *
+                              0.7,
+                          child: Transaction_List(_list, _deletetx));
+                    })
+                  ]),
             ),
             floatingActionButton: Builder(
               builder: (cx) => FloatingActionButton(
