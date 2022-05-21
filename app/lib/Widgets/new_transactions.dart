@@ -19,13 +19,13 @@ class _New_TransactionsState extends State<New_Transactions> {
   void submit() {
     final double amt = double.parse(AmountController.text);
     final String txtitle = titleController.text;
-    if(AmountController.text.isEmpty){
+    if (AmountController.text.isEmpty) {
       return;
     }
-    if (amt <= 0 || txtitle.length == 0 || _selecteddate==null) {
+    if (amt <= 0 || txtitle.length == 0 || _selecteddate == null) {
       return;
     }
-    widget.func(txtitle, amt,_selecteddate);
+    widget.func(txtitle, amt, _selecteddate);
     Navigator.of(context).pop();
   }
 
@@ -48,53 +48,59 @@ class _New_TransactionsState extends State<New_Transactions> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Container(
-      margin: EdgeInsets.all(10),
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TextField(
-            decoration: InputDecoration(labelText: "Title"),
-            controller: titleController,
-            onSubmitted: (_) => submit,
-          ),
-          TextField(
-            decoration: InputDecoration(labelText: "Amount"),
-            controller: AmountController,
-            keyboardType: TextInputType.number,
-            onSubmitted: (_) => submit,
-          ),
-          Container(
-            height: 70,
-            child: Row(
-              children: [
-                Flexible(
-                  child:Text(_selecteddate == null
-                    ? "No Date Choosen"
-                    : DateFormat.yMd().format(_selecteddate)),
-                    fit: FlexFit.tight,
-                    ),
-                FlatButton(
-                  onPressed: datepicker,
-                  child: Text(
-                    "Choose a Date",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  textColor: Theme.of(context).primaryColor,
-                ),
-              ],
+    return SingleChildScrollView(
+      child: Card(
+          child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: "Title"),
+              controller: titleController,
+              onSubmitted: (_) => submit,
             ),
-          ),
-          RaisedButton(
-            color: Theme.of(context).primaryColor,
-            textColor: Theme.of(context).buttonColor,
-            onPressed: submit,
-            child: Text("Add Transaction"),
-          ),
-        ],
-      ),
-    ));
+            TextField(
+              decoration: InputDecoration(labelText: "Amount"),
+              controller: AmountController,
+              keyboardType: TextInputType.number,
+              onSubmitted: (_) => submit,
+            ),
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(_selecteddate == null
+                        ? "No Date Choosen"
+                        : DateFormat.yMd().format(_selecteddate)),
+                    fit: FlexFit.tight,
+                  ),
+                  FlatButton(
+                    onPressed: datepicker,
+                    child: Text(
+                      "Choose a Date",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    textColor: Theme.of(context).primaryColor,
+                  ),
+                ],
+              ),
+            ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Theme.of(context).buttonColor,
+              onPressed: submit,
+              child: Text("Add Transaction"),
+            ),
+          ],
+        ),
+      )),
+    );
   }
 }

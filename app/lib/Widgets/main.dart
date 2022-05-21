@@ -18,6 +18,8 @@ class app_2 extends StatefulWidget {
 
 class _app_2State extends State<app_2> {
   final List<Transaction> _list = [];
+  bool showchart = false;
+
   List<Transaction> get _recentransaction {
     return _list.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
@@ -51,6 +53,8 @@ class _app_2State extends State<app_2> {
 
   @override
   Widget build(BuildContext context) {
+    //final mediaQuery= MediaQuery.of(context);
+    //final isLandscape =mediaQuery.orientation== Orientation.landscape;
     final appBar = AppBar(
       title: Text(
         "My Expenses",
@@ -65,6 +69,16 @@ class _app_2State extends State<app_2> {
         })
       ],
     );
+    // final txlist = Builder(builder: (context) {
+    //   return Container(
+    //       height: (MediaQuery.of(context).size.height -
+    //               appBar.preferredSize.height -
+    //               MediaQuery.of(context).padding.top -
+    //               MediaQuery.of(context).padding.bottom -
+    //               kToolbarHeight) *
+    //           0.7,
+    //       child: Transaction_List(_list, _deletetx));
+    // });
     return MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.purple,
@@ -90,26 +104,54 @@ class _app_2State extends State<app_2> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Builder(builder: (context) {
-                      return Container(
-                          height: (MediaQuery.of(context).size.height -
-                                  appBar.preferredSize.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  kToolbarHeight) *
-                              0.3,
-                          child: chart(_recentransaction));
-                    }),
-                    Builder(builder: (context) {
-                      return Container(
-                          height: (MediaQuery.of(context).size.height -
-                                  appBar.preferredSize.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  kToolbarHeight) *
-                              0.7,
-                          child: Transaction_List(_list, _deletetx));
-                    })
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Show Chart"),
+                        Switch(
+                          value: showchart,
+                          onChanged: (val) {
+                            setState(() {
+                              showchart = val;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    //if (!isLandscape)
+                    // Builder(builder: (context) {
+                    //   return Container(
+                    //       height: (MediaQuery.of(context).size.height -
+                    //               appBar.preferredSize.height -
+                    //               MediaQuery.of(context).padding.top -
+                    //               MediaQuery.of(context).padding.bottom -
+                    //               kToolbarHeight) *
+                    //           0.3,
+                    //       child: chart(_recentransaction));
+                    // }),
+                    // txlist,
+                    //if (isLandscape)
+                    showchart
+                        ? Builder(builder: (context) {
+                            return Container(
+                                height: (MediaQuery.of(context).size.height -
+                                        appBar.preferredSize.height -
+                                        MediaQuery.of(context).padding.top -
+                                        MediaQuery.of(context).padding.bottom -
+                                        kToolbarHeight) *
+                                    0.7,
+                                child: chart(_recentransaction));
+                          })
+                        : Builder(builder: (context) {
+                            return Container(
+                                height: (MediaQuery.of(context).size.height -
+                                        appBar.preferredSize.height -
+                                        MediaQuery.of(context).padding.top -
+                                        MediaQuery.of(context).padding.bottom -
+                                        kToolbarHeight) *
+                                    0.7,
+                                child: Transaction_List(_list, _deletetx));
+                          })
                   ]),
             ),
             floatingActionButton: Builder(
