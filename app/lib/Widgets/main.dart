@@ -8,7 +8,40 @@ import './new_transactions.dart';
 import './chart.dart';
 
 void main() {
-  runApp(app_2());
+  runApp(home());
+}
+
+class home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Personal Expenses',
+      theme: ThemeData(
+          primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          // errorColor: Colors.red,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                // Title dekh liyo
+                headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                button: TextStyle(color: Colors.white),
+              ),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+          )),
+      home: app_2(),
+    );
+  }
 }
 
 class app_2 extends StatefulWidget {
@@ -53,8 +86,8 @@ class _app_2State extends State<app_2> {
 
   @override
   Widget build(BuildContext context) {
-    //final mediaQuery= MediaQuery.of(context);
-    //final isLandscape =mediaQuery.orientation== Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text(
         "My Expenses",
@@ -69,95 +102,67 @@ class _app_2State extends State<app_2> {
         })
       ],
     );
-    // final txlist = Builder(builder: (context) {
-    //   return Container(
-    //       height: (MediaQuery.of(context).size.height -
-    //               appBar.preferredSize.height -
-    //               MediaQuery.of(context).padding.top -
-    //               MediaQuery.of(context).padding.bottom -
-    //               kToolbarHeight) *
-    //           0.7,
-    //       child: Transaction_List(_list, _deletetx));
-    // });
-    return MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.amber,
-          errorColor: Colors.red,
-          fontFamily: "QuickSand",
-          textTheme: TextTheme(
-            headline6: TextStyle(
-                fontFamily: "OpenSans",
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
-          ),
-          appBarTheme: AppBarTheme(
-            titleTextStyle: TextStyle(
-                fontFamily: "OpenSans",
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-          ),
+    final txlist = Builder(builder: (context) {
+      return Container(
+          height: (MediaQuery.of(context).size.height -
+                  appBar.preferredSize.height -
+                  MediaQuery.of(context).padding.top -
+                  MediaQuery.of(context).padding.bottom -
+                  kToolbarHeight) *
+              0.7,
+          child: Transaction_List(_list, _deletetx));
+    });
+    return Scaffold(
+        appBar: appBar,
+        body: SingleChildScrollView(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Show Chart"),
+                  Switch(
+                    value: showchart,
+                    onChanged: (val) {
+                      setState(() {
+                        showchart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!isLandscape)
+              Builder(builder: (context) {
+                return Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top -
+                            MediaQuery.of(context).padding.bottom -
+                            kToolbarHeight) *
+                        0.3,
+                    child: chart(_recentransaction));
+              }),
+            if (!isLandscape) txlist,
+            if (isLandscape)
+              showchart
+                  ? Builder(builder: (context) {
+                      return Container(
+                          height: (MediaQuery.of(context).size.height -
+                                  appBar.preferredSize.height -
+                                  MediaQuery.of(context).padding.top -
+                                  MediaQuery.of(context).padding.bottom -
+                                  kToolbarHeight) *
+                              0.7,
+                          child: chart(_recentransaction));
+                    })
+                  : txlist
+          ]),
         ),
-        home: Scaffold(
-            appBar: appBar,
-            body: SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Show Chart"),
-                        Switch(
-                          value: showchart,
-                          onChanged: (val) {
-                            setState(() {
-                              showchart = val;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    //if (!isLandscape)
-                    // Builder(builder: (context) {
-                    //   return Container(
-                    //       height: (MediaQuery.of(context).size.height -
-                    //               appBar.preferredSize.height -
-                    //               MediaQuery.of(context).padding.top -
-                    //               MediaQuery.of(context).padding.bottom -
-                    //               kToolbarHeight) *
-                    //           0.3,
-                    //       child: chart(_recentransaction));
-                    // }),
-                    // txlist,
-                    //if (isLandscape)
-                    showchart
-                        ? Builder(builder: (context) {
-                            return Container(
-                                height: (MediaQuery.of(context).size.height -
-                                        appBar.preferredSize.height -
-                                        MediaQuery.of(context).padding.top -
-                                        MediaQuery.of(context).padding.bottom -
-                                        kToolbarHeight) *
-                                    0.7,
-                                child: chart(_recentransaction));
-                          })
-                        : Builder(builder: (context) {
-                            return Container(
-                                height: (MediaQuery.of(context).size.height -
-                                        appBar.preferredSize.height -
-                                        MediaQuery.of(context).padding.top -
-                                        MediaQuery.of(context).padding.bottom -
-                                        kToolbarHeight) *
-                                    0.7,
-                                child: Transaction_List(_list, _deletetx));
-                          })
-                  ]),
-            ),
-            floatingActionButton: Builder(
-              builder: (cx) => FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () => startAddNewTransaction(cx)),
-            )));
+        floatingActionButton: Builder(
+          builder: (cx) => FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => startAddNewTransaction(cx)),
+        ));
   }
 }
