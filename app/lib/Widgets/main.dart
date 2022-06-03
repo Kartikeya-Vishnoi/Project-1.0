@@ -1,3 +1,5 @@
+// ignore_for_file: sdk_version_ui_as_code
+
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/Widgets/Transaction_lists.dart';
 import 'package:flutter_complete_guide/Widgets/chart.dart';
