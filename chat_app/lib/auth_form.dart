@@ -38,6 +38,7 @@ class _auth_formState extends State<auth_form> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
+                      key: ValueKey('EmailId'),
                       validator: (value) {
                         if (value!.isEmpty || !value.contains('@')) {
                           return "Please enter a valid gamil id";
@@ -54,6 +55,7 @@ class _auth_formState extends State<auth_form> {
                     ),
                     if (!_login)
                       TextFormField(
+                        key: ValueKey('Username'),
                         validator: (value) {
                           if (value!.length < 5 || value == null) {
                             return "Please Enter a valid User name";
@@ -65,6 +67,7 @@ class _auth_formState extends State<auth_form> {
                         decoration: InputDecoration(labelText: "UserName"),
                       ),
                     TextFormField(
+                      key: ValueKey('Password'),
                       obscureText: true,
                       decoration: InputDecoration(labelText: "Password"),
                       onSaved: (value) {
