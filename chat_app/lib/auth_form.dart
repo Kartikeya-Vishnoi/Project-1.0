@@ -1,8 +1,17 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 class auth_form extends StatefulWidget {
-  const auth_form({Key? key}) : super(key: key);
-
+  auth_form(this.submitfn, this.isloading);
+  bool isloading;
+  final void Function(
+    String email,
+    String password,
+    String username,
+    bool islogin,
+    BuildContext ctx,
+  ) submitfn;
   @override
   State<auth_form> createState() => _auth_formState();
 }
@@ -18,9 +27,8 @@ class _auth_formState extends State<auth_form> {
     final key = formKey.currentState?.validate();
     if (key != null && key) {
       formKey.currentState!.save();
-      print(_email);
-      print(_username);
-      print(_password);
+      widget.submitfn(
+          _email.trim(), _password.trim(), _username.trim(), _login, context);
     }
   }
 
@@ -75,18 +83,21 @@ class _auth_formState extends State<auth_form> {
                       },
                     ),
                     SizedBox(height: 12),
-                    RaisedButton(child: Text("Login"), onPressed: _onsubmit),
-                    FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          _login = !_login;
-                        });
-                      },
-                      textColor: Theme.of(context).primaryColor,
-                      child: _login
-                          ? Text("Create new Account")
-                          : Text("I already have an Account"),
-                    )
+                    if (widget.isloading) CircularProgressIndicator(),
+                    if (!widget.isloading)
+                      RaisedButton(child: Text("Login"), onPressed: _onsubmit),
+                    if (!widget.isloading)
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            _login = !_login;
+                          });
+                        },
+                        textColor: Theme.of(context).primaryColor,
+                        child: _login
+                            ? Text("Create new Account")
+                            : Text("I already have an Account"),
+                      )
                   ],
                 )),
           ),
