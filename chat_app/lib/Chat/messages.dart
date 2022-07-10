@@ -22,15 +22,17 @@ class messages extends StatelessWidget {
         }
 
         final docs = chatSnapshot.data?.docs;
+        final Docs= FirebaseFirestore.instance.collection("users");
         return ListView.builder(
             reverse: true,
             itemCount: docs?.length,
             itemBuilder: (context, index) => (Bubbles(
                   docs?[index].data()['text'],
                   docs?[index].data()['userId'] == user.uid,
+                  // docs?[index].data()['userId']
                 )));
       },
-    );
+    );  
   }
 }
 

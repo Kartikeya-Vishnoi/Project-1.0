@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 import '../auth_form.dart';
 
@@ -16,7 +18,7 @@ class _Auth_ScreenState extends State<Auth_Screen> {
   final _auth = FirebaseAuth.instance;
   bool isloading = false;
   void submit_auth_form(String email, String password, String username,
-      bool islogin, BuildContext ctx) async {
+      File userimg, bool islogin, BuildContext ctx) async {
     UserCredential authResult;
     try {
       setState(() {
@@ -28,13 +30,20 @@ class _Auth_ScreenState extends State<Auth_Screen> {
       } else if (!islogin) {
         authResult = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child(authResult.user.uid + '.jpg');
+        ref.putFile(userimg);
+
         await FirebaseFirestore.instance
             .collection('users')
             .doc(authResult.user.uid)
             .set({'Username': username, 'email': email});
-            setState(() {
-            isloading = false;
-            });
+        setState(() {
+          isloading = false;
+        });
       }
     } on PlatformException catch (err) {
       setState(() {
@@ -58,3 +67,21 @@ class _Auth_ScreenState extends State<Auth_Screen> {
         body: auth_form(submit_auth_form, isloading));
   }
 }
+
+
+// rules_version= '2';
+// service firebase.storage{
+//   match /b/{bucket}/o{
+//     match /{allPaths=**}{
+//       allow read,create: if request.auth=!null;
+//     }
+//   }
+// }
+
+
+// {
+//   "rules": {
+//     ".read": false,
+//     ".write": false
+//   }
+// }
